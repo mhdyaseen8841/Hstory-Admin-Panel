@@ -23,8 +23,8 @@ const navConfig = [
   // },
 
   {
-    title: 'login',
-    path: '/login',
+    title: 'specialisation',
+    path: '/dashboard/specialise',
     icon: icon('ic_lock'),
   },
   {
@@ -35,12 +35,12 @@ const navConfig = [
   {
     title: 'patients',
     path: '/dashboard/patients',
-    icon: icon('ic_lock'),
+    icon: icon('ic_user'),
   },
   {
     title: 'request',
     path: '/dashboard/request',
-    icon: icon('ic_lock'),
+    icon: icon('ic_user'),
   },
   {
     title: 'Not found',

@@ -11,6 +11,7 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import DoctorsPage from './pages/Doctors';
 import PatientsPage from './pages/Patient';
+import SpecialisePage from './pages/Specialisation';
 import RequestPage from './pages/Request';
 
 // ----------------------------------------------------------------------
@@ -25,7 +26,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
-       
+       {path:'specialise' , element:<SpecialisePage/>},
         { path: 'doctors', element: <DoctorsPage /> },
 
         { path: 'patients', element: <PatientsPage /> },

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect,useState } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
@@ -37,9 +37,14 @@ Nav.propTypes = {
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
 
+  const [name,setName]=useState()
+
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
+    const myLocalStorageValue = localStorage.getItem('adminInfo');
+    const myObject = JSON.parse(myLocalStorageValue);
+    setName(myObject.name)
     if (openNav) {
       onCloseNav();
     }
@@ -64,11 +69,11 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {name}
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                Admin
               </Typography>
             </Box>
           </StyledAccount>

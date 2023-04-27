@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { faker } from '@faker-js/faker';
 // @mui
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
 // components
@@ -23,6 +25,23 @@ import {
 export default function DashboardAppPage() {
   const theme = useTheme();
 
+const [data, setData] = useState([]);
+
+  useEffect(() => {
+
+ 
+    axios.get('http://localhost:5000/api/admin/getDashboardData')
+      .then( (response)=> {
+        // handle success
+        console.log(response.data);
+        setData(response.data)
+      })
+      .catch( (error)=> {
+        // handle error
+        console.log(error);
+      })
+    },[])
+
   return (
     <>
       <Helmet>
@@ -36,19 +55,19 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:android-filled'} />
+            <AppWidgetSummary count={data.totalAcceptedDoctors} title="Total Doctors" total={714000} icon={'mdi:doctor'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Users" total={1352831} color="info" icon={'ant-design:apple-filled'} />
+            <AppWidgetSummary count={data.totalPendingDoctors} title="Pending Requests" total={1352831} color="info" icon={'material-symbols:notification-add'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Item Orders" total={1723315} color="warning" icon={'ant-design:windows-filled'} />
+            <AppWidgetSummary count={data.totalUsers} title="Total Patients" total={1723315} color="warning" icon={'material-symbols:inpatient'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Bug Reports" total={234} color="error" icon={'ant-design:bug-filled'} />
+            <AppWidgetSummary count={data.totalBlockedDoctors} title="Blocked Doctors" total={234} color="error" icon={'fluent:presence-blocked-24-regular'} />
           </Grid>
 
         

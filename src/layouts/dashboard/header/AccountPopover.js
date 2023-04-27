@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
@@ -26,7 +26,18 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+  const [name,setName]=useState('')
+  const [email,setEmail]=useState('')
+  const [pic,setPic]= useState('')
 
+  useEffect(() => {
+    const myLocalStorageValue = localStorage.getItem('adminInfo');
+    const myObject = JSON.parse(myLocalStorageValue);
+    setName(myObject.name)
+    setEmail(myObject.email)
+    setPic(myObject.pic)
+  }, [])
+  
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -83,22 +94,22 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {email}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
+        {/* <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={handleClose}>
               {option.label}
             </MenuItem>
           ))}
-        </Stack>
+        </Stack> */}
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 

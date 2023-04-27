@@ -22,11 +22,14 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
+import { Toast } from '@chakra-ui/react';
 import axios from 'axios';
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
+import CustomizedDialogs from '../components/AddSpecialisation';
+
 // sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
@@ -35,11 +38,8 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'gender', label: 'Gender', alignRight: false },
-  { id: 'state', label: 'State', alignRight: false },
-  { id: 'district', label: 'District', alignRight: false },
-  { id: 'city', label: 'city', alignRight: false },
+  { id: 'speciality', label: 'Speciality', alignRight: false },
+ 
   { id: '' },
 ];
 
@@ -76,8 +76,10 @@ function applySortFilter(array, comparator, query) {
 
 
 
-export default function PatientsPage() {
+export default function SpecialisePage() {
   const [open, setOpen] = useState(null);
+  
+  const [Id,setId]=useState('')
 
   const [page, setPage] = useState(0);
 
@@ -92,9 +94,38 @@ export default function PatientsPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [USERLIST,setUserList]=useState([{}])
+const [pOpen, setPOpen] = useState(false);
 
-
-
+const handleDelete = () => {
+  
+  try{
+    axios.post(`http://localhost:5000/api/admin/deleteSpecialization`,{id:Id})
+    .then((response) => {
+      getDoctors();
+    }
+    )
+    .catch((err) => {
+      console.log(err);
+      Toast({
+        title: 'Error',
+        description: 'Something went wrong',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      })
+    });
+  }catch(err){
+    console.log(err);
+    Toast({
+      title: 'Error',
+      description: 'Something went wrong',
+      status: 'error',
+      duration: 9000,
+      isClosable: true,
+    })
+  }
+  handleCloseMenu();
+}
 
   const getDoctors =  () => {
   
@@ -108,10 +139,10 @@ console.log(token)
         Authorization: `Bearer ${token}`,
       },
   }
-    axios.get('http://localhost:5000/api/admin/getAllUsers',config)
+    axios.get('http://localhost:5000/api/admin/specialization',config)
 
     .then((response) => {
-    
+    console.log(response)
       setUserList(response.data);
     })
   }catch(err){
@@ -125,8 +156,13 @@ console.log(token)
     }, []);
 
 
-  const handleOpenMenu = (event) => {
+  const handleOpenMenu = (event,id) => {
     setOpen(event.currentTarget);
+    setId(id)
+  };
+
+  const handleClose = () => {
+    setPOpen(false);
   };
 
   const handleCloseMenu = () => {
@@ -146,6 +182,11 @@ console.log(token)
       return;
     }
     setSelected([]);
+  };
+
+  const handlepopup = () => {
+    // console.log("clicked")
+    setPOpen(true);
   };
 
   const handleClick = (event, name) => {
@@ -186,24 +227,24 @@ console.log(token)
   return (
     <>
       <Helmet>
-        <title> Patients | HSTORY </title>
+        <title> specialization | HSTORY </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-          Patients
+          specialization
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Patients
+          <Button variant="contained" onClick={handlepopup} startIcon={<Iconify icon="eva:plus-fill"   />}>
+            New specialization
           </Button>
         </Stack>
-
+<CustomizedDialogs Open={pOpen} Close={handleClose} getDoc={getDoctors} />
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 800 }} style={{ width: '50%' }}>
               <Table>
                 <UserListHead
                   order={order}
@@ -216,32 +257,25 @@ console.log(token)
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { _id, name, gender, state, district, city } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { _id, specialised } = row;
+                    const selectedUser = selected.indexOf(specialised) !== -1;
 
                     return (
                       <TableRow hover key={_id} tabIndex={-1} role="checkbox" selected={selectedUser}>
-                     
+                    
 
                         <TableCell component="th"  sx={{cursor:'pointer'}}  scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name}  />
+                            <Avatar alt={specialised}  />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {specialised}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{gender}</TableCell>
-
-                        <TableCell align="left">{state}</TableCell>
-
-                        <TableCell align="left">{district}</TableCell>
-
-                        <TableCell align="left">{city}</TableCell>
-
+                     
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton size="large" color="inherit" onClick={(e)=>handleOpenMenu(e,_id)}>
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -312,12 +346,9 @@ console.log(token)
           },
         }}
       >
-        <MenuItem>
-          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
-          Edit
-        </MenuItem>
+        
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }} onClick={()=>{handleDelete()}}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
