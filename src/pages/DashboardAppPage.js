@@ -35,12 +35,15 @@ const [data, setData] = useState([]);
         // handle success
         console.log(response.data);
         setData(response.data)
+        console.log("heyheyhey")
+        console.log(response.data)
+        console.log(data)
       })
       .catch( (error)=> {
         // handle error
         console.log(error);
       })
-    },[])
+    },[data])
 
   return (
     <>

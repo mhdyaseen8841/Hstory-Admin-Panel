@@ -56,7 +56,7 @@ export default function AppWidgetSummary({ count,title, total, icon, color = 'pr
         <Iconify icon={icon} width={24} height={24} />
       </StyledIcon>
 
-      <Typography variant="h3">{fShortenNumber(count)}</Typography>
+      <Typography variant="h3">{count}</Typography>
 
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
