@@ -354,9 +354,7 @@ const handleClose= ()=>{
           <Typography variant="h4" gutterBottom>
           Doctors
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Doctors 
-          </Button>
+    
         </Stack>
 
         <Card>

@@ -194,9 +194,7 @@ console.log(token)
           <Typography variant="h4" gutterBottom>
           Patients
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Patients
-          </Button>
+         
         </Stack>
 
         <Card>
